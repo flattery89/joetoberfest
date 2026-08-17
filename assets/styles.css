@@ -133,23 +133,38 @@ img, svg, iframe { max-width: 100%; }
 
 .hero {
   position: relative;
-  background: linear-gradient(170deg, #24503a 0%, #1c3f2d 55%, #12291d 100%);
+  background: #1d5637;
   color: var(--foam);
   text-align: center;
-  padding: clamp(2.5rem, 6vw, 4.5rem) 1.25rem clamp(5rem, 9vw, 7rem);
+  padding: clamp(3.5rem, 7vw, 5.5rem) 1.25rem clamp(3.5rem, 7vw, 5.5rem);
   overflow: hidden;
 }
 
-/* Bavarian lozenge field */
+/* Harlequin diamond field, tiled from a 240px seamless tile.
+   Overhangs top and bottom so the parallax shift never exposes an edge.
+   background-attachment: fixed is avoided deliberately — iOS Safari
+   doesn't honour it, so the effect is driven by transform in main.js. */
 .hero__pattern {
   position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(45deg, rgba(255, 255, 255, .07) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, .07) 75%),
-    linear-gradient(45deg, rgba(255, 255, 255, .07) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, .07) 75%);
-  background-size: 72px 72px;
-  background-position: 0 0, 36px 36px;
+  inset: -22% 0;
+  background-image: url('img/harlequin.webp');
+  background-position: center;
+  background-size: cover;
   pointer-events: none;
+  will-change: transform;
+}
+
+/* The raw pattern is cream-on-green, and cream text over cream diamonds is
+   unreadable — this scrim holds the diamonds back far enough to read over
+   while still letting them show. */
+.hero__pattern::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(170deg,
+    rgba(29, 86, 55, .82) 0%,
+    rgba(24, 68, 44, .86) 55%,
+    rgba(16, 46, 30, .9) 100%);
 }
 
 .hero__inner { position: relative; max-width: 900px; margin-inline: auto; }
@@ -280,7 +295,15 @@ img, svg, iframe { max-width: 100%; }
 }
 .section--cream { background: var(--cream); }
 .section--blue  { background: linear-gradient(165deg, var(--blue), var(--blue-dark)); color: var(--foam); }
-.section--brown { background: linear-gradient(165deg, #2a5a3f, #14301f); color: var(--foam); }
+/* Wood table top. The texture is a stand-in — swap assets/img/wood.webp
+   for a real walnut photo and nothing else needs to change. */
+.section--brown {
+  background:
+    linear-gradient(rgba(20, 12, 5, .45), rgba(20, 12, 5, .55)),
+    url('img/wood.webp') center / cover no-repeat,
+    #2e1c0d;
+  color: var(--foam);
+}
 
 .section__pattern {
   position: absolute;
@@ -473,6 +496,25 @@ img, svg, iframe { max-width: 100%; }
   gap: clamp(1.6rem, 5vw, 3.4rem);
   margin-top: 2.8rem;
 }
+/* Cream cards sitting on the wood. */
+.section--brown .split__col {
+  background: var(--cream);
+  border: 3px solid var(--gold);
+  border-radius: 16px;
+  padding: clamp(1.4rem, 3.5vw, 2.1rem);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, .38);
+}
+.section--brown .split__col p { color: var(--brown-mid); }
+.section--brown .split__col .split__head { color: var(--brown); }
+.section--brown .split__col .checklist li { color: var(--brown-mid); }
+.section--brown .split__col .muted-light { color: var(--brown-soft); }
+.section--brown .split__col .claimed-lede { color: var(--gold-deep) !important; }
+.section--brown .split__col .claimed li {
+  background: rgba(184, 151, 90, .16);
+  border-color: rgba(138, 108, 55, .5);
+  color: var(--brown);
+}
+
 .split__col p { color: rgba(255, 250, 240, .84); }
 .split__head {
   font-family: var(--font-display);
@@ -549,6 +591,42 @@ img, svg, iframe { max-width: 100%; }
   color: rgba(255, 250, 240, .68);
 }
 
+/* ─────────── Forest section + divider ─────────── */
+
+.section--forest {
+  background: linear-gradient(170deg, #1d5637 0%, #17452c 60%, #123522 100%);
+  color: var(--foam);
+  padding-top: clamp(2.6rem, 6vw, 3.8rem);
+}
+
+/* Gold rule with a lozenge in the middle, sitting on the seam. */
+.divider {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(420px, 70%);
+  height: 18px;
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+}
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.divider span {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+  background: var(--gold);
+  transform: rotate(45deg);
+}
+
 /* ─────────── The cast ─────────── */
 
 .cast { margin-top: clamp(2.6rem, 6vw, 4rem); }
@@ -564,22 +642,62 @@ img, svg, iframe { max-width: 100%; }
   margin: 0;
   padding: 0;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: flex-end;
   justify-content: center;
-  gap: clamp(.5rem, 3vw, 2rem);
+  /* Negative gap lets them overlap as they wander past each other. */
+  gap: clamp(-2rem, -2vw, 0rem);
 }
-.cast__member { flex: 0 1 auto; }
+.cast__member {
+  flex: 0 1 auto;
+  margin-inline: clamp(-34px, -3vw, -8px);
+  will-change: transform;
+}
 .cast__member img {
   display: block;
   width: auto;
   height: clamp(120px, 22vw, 230px);
-  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .35));
-  transition: transform .22s ease;
+  filter: drop-shadow(0 12px 20px rgba(0, 0, 0, .45));
 }
-.cast__member:nth-child(odd) img  { transform: rotate(-1.5deg); }
-.cast__member:nth-child(even) img { transform: rotate(1.5deg); }
-.cast__member img:hover { transform: translateY(-8px) rotate(0deg) scale(1.04); }
+
+/* ─── Dancing ───
+   Each one gets its own path, duration and delay so they drift out of
+   step and cross in front of each other. z-index is stepped inside the
+   same keyframes, which is what makes them swap depth mid-wander.     */
+
+@keyframes dance-a {
+  0%,100% { transform: translate(0,0) rotate(-3deg);      z-index: 1; }
+  25%     { transform: translate(38px,-16px) rotate(4deg); z-index: 4; }
+  50%     { transform: translate(14px,6px) rotate(-2deg);  z-index: 2; }
+  75%     { transform: translate(-30px,-10px) rotate(3deg); z-index: 3; }
+}
+@keyframes dance-b {
+  0%,100% { transform: translate(0,0) rotate(2deg);        z-index: 3; }
+  30%     { transform: translate(-42px,-12px) rotate(-5deg); z-index: 1; }
+  55%     { transform: translate(-10px,-22px) rotate(3deg);  z-index: 4; }
+  80%     { transform: translate(26px,8px) rotate(-1deg);    z-index: 2; }
+}
+@keyframes dance-c {
+  0%,100% { transform: translate(0,0) rotate(-2deg);       z-index: 4; }
+  20%     { transform: translate(30px,10px) rotate(4deg);   z-index: 2; }
+  48%     { transform: translate(-24px,-18px) rotate(-4deg); z-index: 3; }
+  72%     { transform: translate(-40px,4px) rotate(2deg);    z-index: 1; }
+}
+@keyframes dance-d {
+  0%,100% { transform: translate(0,0) rotate(3deg);        z-index: 2; }
+  35%     { transform: translate(-34px,-14px) rotate(-3deg); z-index: 3; }
+  60%     { transform: translate(20px,-6px) rotate(5deg);    z-index: 1; }
+  85%     { transform: translate(36px,12px) rotate(-2deg);   z-index: 4; }
+}
+
+.cast__member:nth-child(1) { animation: dance-a 13s ease-in-out infinite; }
+.cast__member:nth-child(2) { animation: dance-b 16s ease-in-out infinite -3s; }
+.cast__member:nth-child(3) { animation: dance-c 14.5s ease-in-out infinite -7s; }
+.cast__member:nth-child(4) { animation: dance-d 17.5s ease-in-out infinite -1.5s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cast__member { animation: none; }
+}
 
 /* ─────────── Music ─────────── */
 

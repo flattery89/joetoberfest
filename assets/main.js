@@ -97,6 +97,37 @@ function initRsvp() {
   btn.removeAttribute('target');
 }
 
+/* ─────────── Hero parallax ───────────
+   Drifts the diamond field slower than the page as you scroll.
+   Driven by transform rather than background-attachment: fixed, which
+   iOS Safari ignores. Skipped entirely for anyone who has asked for
+   reduced motion.                                                     */
+
+function initParallax() {
+  const layer = document.querySelector('.hero__pattern');
+  const hero = document.querySelector('.hero');
+  if (!layer || !hero) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  let ticking = false;
+
+  function update() {
+    ticking = false;
+    const y = window.scrollY || window.pageYOffset;
+    // Once the hero has scrolled past there's nothing to move.
+    if (y > hero.offsetHeight) return;
+    layer.style.transform = `translate3d(0, ${y * 0.35}px, 0)`;
+  }
+
+  window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(update);
+  }, { passive: true });
+
+  update();
+}
+
 /* ─────────── Google Calendar link ───────────
    The .ics download in the markup covers Apple and Outlook. Google
    Calendar wants its own URL, built here so the event details stay in
@@ -275,6 +306,7 @@ function initDishBoard() {
 document.addEventListener('DOMContentLoaded', () => {
   initCountdown();
   initRsvp();
+  initParallax();
   initGoogleCalendar();
   initMap();
   initDishBoard();
