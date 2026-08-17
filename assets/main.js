@@ -97,6 +97,29 @@ function initRsvp() {
   btn.removeAttribute('target');
 }
 
+/* ─────────── Google Calendar link ───────────
+   The .ics download in the markup covers Apple and Outlook. Google
+   Calendar wants its own URL, built here so the event details stay in
+   one place. Times are UTC: noon Eastern on 19 Sep 2026 is 16:00Z.   */
+
+function initGoogleCalendar() {
+  const link = document.getElementById('gcalLink');
+  if (!link) return;
+
+  const params = new URLSearchParams({
+    action: 'TEMPLATE',
+    text: 'Joetoberfest 2026',
+    dates: '20260919T160000Z/20260920T020000Z',
+    location: PARTY.address,
+    details:
+      "Flattery's Harp n Stein presents Joetoberfest — beer, brats, music " +
+      'and good times. Starts at noon, goes till whenever.\n\n' +
+      'Details and RSVP: https://flattery89.github.io/joetoberfest/',
+  });
+
+  link.href = `https://calendar.google.com/calendar/render?${params}`;
+}
+
 /* ─────────── Map ─────────── */
 
 function initMap() {
@@ -252,6 +275,7 @@ function initDishBoard() {
 document.addEventListener('DOMContentLoaded', () => {
   initCountdown();
   initRsvp();
+  initGoogleCalendar();
   initMap();
   initDishBoard();
 });

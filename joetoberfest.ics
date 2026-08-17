@@ -1,0 +1,20 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Joetoberfest//Party//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:joetoberfest-2026@flattery89.github.io
+DTSTAMP:20260817T190000Z
+DTSTART:20260919T160000Z
+DTEND:20260920T020000Z
+SUMMARY:Joetoberfest 2026
+LOCATION:415 Oak Hill Dr\, Altamonte Springs\, FL 32701
+URL:https://flattery89.github.io/joetoberfest/
+DESCRIPTION:Flattery's Harp n Stein presents Joetoberfest - beer, brats, 
+ music and good times. Starts at noon, goes till whenever. Wurst and Bava
+ rian pretzels from Joe and Destinee, three homebrews on tap. Bring a sid
+ e or a dessert if you can. Tracht optional.\n\nDetails and RSVP: https:/
+ /flattery89.github.io/joetoberfest/
+END:VEVENT
+END:VCALENDAR

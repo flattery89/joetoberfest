@@ -101,7 +101,33 @@ img, svg, iframe { max-width: 100%; }
   color: var(--foam);
   border-color: rgba(255, 250, 240, .28);
 }
+.btn--ghost {
+  background: rgba(251, 245, 230, .08);
+  color: var(--foam);
+  border-color: rgba(220, 196, 139, .65);
+  backdrop-filter: blur(3px);
+}
 .btn--big { font-size: 1.3rem; padding: 1.05em 2.8em; }
+
+/* ─────────── Hero actions ─────────── */
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .8rem;
+  justify-content: center;
+}
+.hero__cal-note {
+  margin: 1.1rem 0 0;
+  font-size: .88rem;
+  color: rgba(255, 250, 240, .62);
+}
+.hero__cal-link {
+  color: var(--gold-light);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.hero__cal-link:hover { color: var(--foam); }
 
 /* ═══════════ HERO ═══════════ */
 

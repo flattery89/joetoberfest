@@ -7,6 +7,12 @@
 <meta name="description" content="Joetoberfest 2026 — Saturday, September 19th at noon. Beer, brats, music, and good times at Flattery's Harp n Stein.">
 <meta name="theme-color" content="#1c3f2d">
 
+<!-- Keep this out of search results. The link still works for anyone it's
+     sent to — but the house address, date, and hours don't belong in Google.
+     Deliberately not blocked in robots.txt: crawlers must be able to fetch
+     the page to see this tag at all. -->
+<meta name="robots" content="noindex, nofollow">
+
 <meta property="og:title" content="Joetoberfest 2026">
 <meta property="og:description" content="Saturday, September 19th at noon. Beer · Brats · Music · Good Times. Raise a stein and let's celebrate.">
 <meta property="og:type" content="website">
@@ -85,7 +91,9 @@
     <p class="hero__where" data-fill="where">415 Oak Hill Dr &middot; Altamonte Springs, FL 32701</p>
 
     <!-- Countdown -->
-    <div class="countdown" id="countdown" data-target="2026-09-19T12:00:00-05:00">
+    <!-- Noon Eastern. Altamonte Springs is America/New_York, and 19 Sep 2026
+         is inside daylight saving, so the offset is -04:00 not -05:00. -->
+    <div class="countdown" id="countdown" data-target="2026-09-19T12:00:00-04:00">
       <div class="countdown__unit"><span class="countdown__num" data-cd="days">--</span><span class="countdown__label">Days</span></div>
       <div class="countdown__unit"><span class="countdown__num" data-cd="hours">--</span><span class="countdown__label">Hours</span></div>
       <div class="countdown__unit"><span class="countdown__num" data-cd="mins">--</span><span class="countdown__label">Minutes</span></div>
@@ -93,7 +101,16 @@
     </div>
     <p class="countdown__done" id="countdownDone" hidden>Es ist soweit — it's happening. Get over here.</p>
 
-    <a class="btn btn--gold" href="#rsvp">RSVP &mdash; Ja, bitte!</a>
+    <div class="hero__actions">
+      <a class="btn btn--gold" href="#rsvp">RSVP &mdash; Ja, bitte!</a>
+      <a class="btn btn--ghost" href="joetoberfest.ics" download="joetoberfest.ics">
+        Add to calendar
+      </a>
+    </div>
+    <p class="hero__cal-note">
+      That button covers iPhone, Mac and Outlook.
+      <a class="hero__cal-link" id="gcalLink" href="#" target="_blank" rel="noopener">On Google Calendar?</a>
+    </p>
 
   </div>
   <div class="foam" aria-hidden="true"></div>
