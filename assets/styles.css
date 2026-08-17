@@ -56,21 +56,6 @@ img, svg, iframe { max-width: 100%; }
 .muted { color: var(--brown-soft); font-size: .92em; }
 .muted-light { color: rgba(255, 250, 240, .72); font-size: .94em; }
 
-/* ─────────── Bunting ─────────── */
-
-.bunting {
-  height: 30px;
-  background:
-    linear-gradient(135deg, var(--blue) 25%, transparent 25%) -20px 0,
-    linear-gradient(225deg, var(--blue) 25%, transparent 25%) -20px 0,
-    linear-gradient(315deg, var(--foam) 25%, transparent 25%),
-    linear-gradient(45deg,  var(--foam) 25%, transparent 25%);
-  background-size: 40px 40px;
-  background-color: var(--blue-deep);
-  border-bottom: 4px solid var(--green-line, #12291d);
-}
-.bunting--flip { transform: scaleY(-1); border-bottom: none; border-top: 4px solid var(--gold-deep); }
-
 /* ─────────── Buttons ─────────── */
 
 .btn {
@@ -273,23 +258,6 @@ img, svg, iframe { max-width: 100%; }
   margin: 0 0 2rem;
 }
 
-/* ─────────── Beer foam divider ─────────── */
-
-.foam {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -2px;
-  height: 46px;
-  background: var(--cream);
-  -webkit-mask-image: radial-gradient(circle at 22px 24px, #000 21px, transparent 22px);
-  mask-image: radial-gradient(circle at 22px 24px, #000 21px, transparent 22px);
-  -webkit-mask-size: 44px 46px;
-  mask-size: 44px 46px;
-  -webkit-mask-repeat: repeat-x;
-  mask-repeat: repeat-x;
-}
-
 /* ═══════════ SECTIONS ═══════════ */
 
 .section {
@@ -298,8 +266,7 @@ img, svg, iframe { max-width: 100%; }
 }
 .section--cream { background: var(--cream); }
 .section--blue  { background: linear-gradient(165deg, var(--blue), var(--blue-dark)); color: var(--foam); }
-/* Wood table top. The texture is a stand-in — swap assets/img/wood.webp
-   for a real walnut photo and nothing else needs to change. */
+/* Walnut table top. */
 .section--brown {
   background:
     linear-gradient(rgba(20, 12, 5, .45), rgba(20, 12, 5, .55)),
@@ -607,8 +574,12 @@ img, svg, iframe { max-width: 100%; }
    The green wash keeps it in the site's palette and stops the warm
    parquet from swallowing the gold heading. */
 .section--forest {
+  /* Weighted darker at the top: the chandelier sits right behind the
+     heading and was washing it out. */
   background:
-    linear-gradient(rgba(18, 48, 31, .62), rgba(14, 40, 25, .74)),
+    linear-gradient(rgba(10, 30, 19, .86) 0%,
+                    rgba(12, 36, 23, .70) 38%,
+                    rgba(14, 40, 25, .76) 100%),
     url('img/hall.webp') center / cover no-repeat,
     #1d5637;
   color: var(--foam);
@@ -652,6 +623,9 @@ img, svg, iframe { max-width: 100%; }
   font-size: clamp(1.1rem, 3vw, 1.45rem);
   color: var(--gold-light);
   margin: 0 0 clamp(2.6rem, 6vw, 4.2rem);
+  /* Sits over a photo, so it carries its own contrast rather than
+     relying on whatever happens to be behind it. */
+  text-shadow: 0 2px 4px rgba(0, 0, 0, .9), 0 0 22px rgba(0, 0, 0, .75);
 }
 .cast__row {
   list-style: none;
