@@ -494,6 +494,67 @@ img, svg, iframe { max-width: 100%; }
   font-size: .95rem;
 }
 
+/* ─────────── The invite ─────────── */
+
+.section__lede--light { color: rgba(255, 250, 240, .8); }
+
+.invite {
+  margin: 2.6rem auto 0;
+  max-width: 520px;
+  text-align: center;
+}
+.invite__link {
+  display: block;
+  border: 5px solid var(--gold);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  transition: transform .2s ease, box-shadow .2s ease;
+  background: var(--cream);
+}
+.invite__link:hover, .invite__link:focus-visible {
+  transform: translateY(-4px) rotate(-.5deg);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .38);
+}
+.invite__link img { display: block; width: 100%; height: auto; }
+.invite__cap {
+  margin-top: 1rem;
+  font-size: .92rem;
+  color: rgba(255, 250, 240, .68);
+}
+
+/* ─────────── The cast ─────────── */
+
+.cast { margin-top: clamp(2.6rem, 6vw, 4rem); }
+.cast__lede {
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 3vw, 1.45rem);
+  color: var(--gold-light);
+  margin: 0 0 1.4rem;
+}
+.cast__row {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: center;
+  gap: clamp(.5rem, 3vw, 2rem);
+}
+.cast__member { flex: 0 1 auto; }
+.cast__member img {
+  display: block;
+  width: auto;
+  height: clamp(120px, 22vw, 230px);
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .35));
+  transition: transform .22s ease;
+}
+.cast__member:nth-child(odd) img  { transform: rotate(-1.5deg); }
+.cast__member:nth-child(even) img { transform: rotate(1.5deg); }
+.cast__member img:hover { transform: translateY(-8px) rotate(0deg) scale(1.04); }
+
 /* ─────────── Music ─────────── */
 
 .music__frame {
@@ -565,6 +626,13 @@ img, svg, iframe { max-width: 100%; }
   text-align: center;
 }
 .footer .wrap { padding: 2.6rem 0 2.8rem; }
+.footer__heart {
+  display: block;
+  width: clamp(180px, 34vw, 260px);
+  height: auto;
+  margin: 0 auto 1.4rem;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, .4));
+}
 .footer__prost {
   font-family: var(--font-display);
   font-size: clamp(1.05rem, 3vw, 1.5rem);
