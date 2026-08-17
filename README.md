@@ -50,6 +50,34 @@ Every failure — network down, sheet unpublished, nothing approved yet —
 leaves the fallback list in place rather than emptying the section. Entries
 render via `textContent`, so submitted text can never inject markup.
 
+### Two sources, merged
+
+The list is the union of two things, deduped on a loose key so the same dish
+from both doesn't appear twice:
+
+- **`assets/dishes.json`** — reviewed entries committed to the repo
+- **the published sheet** — whatever Joe has ticked `Show on site` for
+
+Either source failing just contributes nothing. Joe's checkbox keeps working
+whether or not the scheduled review runs.
+
+### Reviewing new answers
+
+    python3 tools/responses.py            # dish answers not yet on the site
+    python3 tools/responses.py --counts   # headcount
+
+The script is read-only — there's no Sheets API access here, so approvals go
+into `dishes.json` rather than back into the sheet.
+
+**Publish a dish only if it is plainly a real dish or drink someone could
+carry through the door.** When in doubt, leave it out and ask Joe — a missing
+dish is a non-event, a bad one is on a public page under his name.
+
+Reject: anything not food (`themselves`, `cash`, `my appetite`), crude or
+sexual answers, placeholders (`n/a`, `tbd`, `idk`, `maybe`, `?`), and jokes
+that aren't a dish. Keep the guest's own wording otherwise — fix casing and
+obvious typos, nothing more. Never invent a dish nobody offered.
+
 ## Running it locally
 
 ```

@@ -26,6 +26,10 @@ const PARTY = {
   // page keeps the hand-written fallback list in index.html.
   dishBoardCsv: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQc2fDKK1oDVUGrJ5WVH6MxhS1irTFToS784LmUqRxP_XW6jgC4HdINgD-u5Gwumwi_4TOJY5IjOHWR/pub?gid=1787531315&single=true&output=csv',
 
+  // Reviewed dishes committed to the repo. Merged with the sheet above, so
+  // Joe's checkbox and the scheduled review both feed the same list.
+  dishBoardJson: 'assets/dishes.json',
+
   // Longest dish text we'll render, so one joker can't blow up the layout.
   maxDishLength: 90,
 };
@@ -157,32 +161,70 @@ function parseCsv(text) {
   return rows;
 }
 
-function initDishBoard() {
-  const list = document.getElementById('dishList');
-  const lede = document.getElementById('dishLede');
-  if (!list || !PARTY.dishBoardCsv) return;
+// Loose key so "German Potato Salad" and "german potato salad!" collapse
+// into one entry when the two sources overlap.
+function dishKey(text) {
+  return (text || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+}
 
-  // Google caches published sheets for a few minutes; a per-minute token
-  // stops the browser adding its own cache on top of that.
+function withTimeout(promise, ms) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), ms)),
+  ]);
+}
+
+// Google caches published sheets for a few minutes anyway; a per-minute
+// token stops the browser stacking its own cache on top of that.
+function fetchSheetDishes() {
+  if (!PARTY.dishBoardCsv) return Promise.resolve([]);
+
   const sep = PARTY.dishBoardCsv.includes('?') ? '&' : '?';
   const url = `${PARTY.dishBoardCsv}${sep}cb=${Math.floor(Date.now() / 60000)}`;
 
-  const timeout = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error('timeout')), 8000));
-
-  Promise.race([fetch(url, { cache: 'no-store' }), timeout])
+  return withTimeout(fetch(url, { cache: 'no-store' }), 8000)
     .then((res) => {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return res.text();
     })
-    .then((text) => {
-      const items = parseCsv(text)
-        .map((r) => ({
-          dish: (r[0] || '').trim(),
-          who:  (r[1] || '').trim(),
-        }))
-        // Drop blanks and a header row if the sheet has one.
-        .filter((it) => it.dish && !/^(dish|what|item)$/i.test(it.dish));
+    .then((text) => parseCsv(text)
+      .map((r) => ({ dish: (r[0] || '').trim(), who: (r[1] || '').trim() }))
+      // Drop blanks and the header row.
+      .filter((it) => it.dish && !/^(dish|what|item)$/i.test(it.dish)))
+    .catch(() => []);
+}
+
+function fetchReviewedDishes() {
+  if (!PARTY.dishBoardJson) return Promise.resolve([]);
+
+  return withTimeout(fetch(PARTY.dishBoardJson, { cache: 'no-store' }), 8000)
+    .then((res) => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
+    })
+    .then((data) => (data.dishes || [])
+      .map((d) => ({ dish: (d.dish || '').trim(), who: (d.who || '').trim() }))
+      .filter((it) => it.dish))
+    .catch(() => []);
+}
+
+function initDishBoard() {
+  const list = document.getElementById('dishList');
+  const lede = document.getElementById('dishLede');
+  if (!list) return;
+
+  // Both sources, independently. Either failing just contributes nothing.
+  Promise.all([fetchReviewedDishes(), fetchSheetDishes()])
+    .then(([reviewed, fromSheet]) => {
+      const seen = new Set();
+      const items = [];
+
+      reviewed.concat(fromSheet).forEach((it) => {
+        const key = dishKey(it.dish);
+        if (!key || seen.has(key)) return;
+        seen.add(key);
+        items.push(it);
+      });
 
       if (!items.length) return;   // nothing approved yet — keep the fallback
 
