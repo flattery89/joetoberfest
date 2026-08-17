@@ -172,8 +172,9 @@ img, svg, iframe { max-width: 100%; }
 
 .crest {
   display: block;
-  width: clamp(200px, 32vw, 330px);
-  height: auto;
+  width: auto;
+  height: clamp(150px, 30vw, 275px);   /* capped at 275px tall */
+  max-width: 100%;
   margin: 0 auto .9rem;
   filter: drop-shadow(0 10px 22px rgba(0, 0, 0, .45));
 }
@@ -307,14 +308,19 @@ img, svg, iframe { max-width: 100%; }
   color: var(--foam);
 }
 
+/* Lozenge field — four corner gradients meeting to form diamonds rather
+   than the squares this used to draw. Tile is 54px, so no diamond is
+   taller than 55px. Colour stays a white wash over the section gradient,
+   so the blues underneath are untouched. */
 .section__pattern {
   position: absolute;
   inset: 0;
-  background-image:
-    linear-gradient(45deg, rgba(255, 255, 255, .06) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, .06) 75%),
-    linear-gradient(45deg, rgba(255, 255, 255, .06) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, .06) 75%);
-  background-size: 72px 72px;
-  background-position: 0 0, 36px 36px;
+  /* Bavarian lozenge: slanted rhombi, 44 wide x 54 tall. The tile is two
+     diamonds deep so the shear can be half as steep and still repeat on
+     a plain rectangle — one tile height shifts exactly one period. */
+  background-image: url('img/lozenge.png');
+  background-size: 44px 108px;
+  background-repeat: repeat;
   pointer-events: none;
 }
 .section--rsvp .wrap { position: relative; }
@@ -595,8 +601,16 @@ img, svg, iframe { max-width: 100%; }
 
 /* ─────────── Forest section + divider ─────────── */
 
+/* The beer hall the locals are dancing in. `cover` keeps the full width
+   visible on desktop and crops in from the sides on narrow screens,
+   which is what we want — the hall is widescreen and phones are not.
+   The green wash keeps it in the site's palette and stops the warm
+   parquet from swallowing the gold heading. */
 .section--forest {
-  background: linear-gradient(170deg, #1d5637 0%, #17452c 60%, #123522 100%);
+  background:
+    linear-gradient(rgba(18, 48, 31, .62), rgba(14, 40, 25, .74)),
+    url('img/hall.webp') center / cover no-repeat,
+    #1d5637;
   color: var(--foam);
   padding-top: clamp(2.6rem, 6vw, 3.8rem);
 }
@@ -637,7 +651,7 @@ img, svg, iframe { max-width: 100%; }
   font-family: var(--font-display);
   font-size: clamp(1.1rem, 3vw, 1.45rem);
   color: var(--gold-light);
-  margin: 0 0 1.4rem;
+  margin: 0 0 clamp(2.6rem, 6vw, 4.2rem);
 }
 .cast__row {
   list-style: none;
