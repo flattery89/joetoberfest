@@ -78,6 +78,15 @@ sexual answers, placeholders (`n/a`, `tbd`, `idk`, `maybe`, `?`), and jokes
 that aren't a dish. Keep the guest's own wording otherwise — fix casing and
 obvious typos, nothing more. Never invent a dish nobody offered.
 
+### No names, ever
+
+The board lists **what** is being brought, never **who** is bringing it.
+
+This is a data rule, not a display rule. `assets/dishes.json` and the
+published sheet CSV are both fetched by the browser, so anything in them is
+public whether or not the page renders it. Record dishes only; the renderer
+ignores a second column if one appears.
+
 ## Running it locally
 
 ```

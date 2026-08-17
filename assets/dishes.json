@@ -1,8 +1,8 @@
 {
-  "_comment": "Dishes approved for the public site. Merged with the published sheet by initDishBoard() in main.js. Reviewed entries only — see tools/responses.py and the review rules in README.md.",
+  "_comment": "Dishes approved for the public site. Merged with the published sheet by initDishBoard() in main.js. This file is fetched by the browser, so it is public — record the dish only, never who is bringing it. See the review rules in README.md.",
   "updated": "2026-08-17",
   "dishes": [
-    { "dish": "German potato salad", "who": "Pat & Leigh" },
-    { "dish": "German butter cake", "who": "Bob & Inga" }
+    { "dish": "German potato salad" },
+    { "dish": "German butter cake" }
   ]
 }

@@ -187,8 +187,10 @@ function fetchSheetDishes() {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return res.text();
     })
+    // Column A only. Any name column is ignored on purpose — the board
+    // shows what's coming, not who's bringing it.
     .then((text) => parseCsv(text)
-      .map((r) => ({ dish: (r[0] || '').trim(), who: (r[1] || '').trim() }))
+      .map((r) => ({ dish: (r[0] || '').trim() }))
       // Drop blanks and the header row.
       .filter((it) => it.dish && !/^(dish|what|item)$/i.test(it.dish)))
     .catch(() => []);
@@ -203,7 +205,7 @@ function fetchReviewedDishes() {
       return res.json();
     })
     .then((data) => (data.dishes || [])
-      .map((d) => ({ dish: (d.dish || '').trim(), who: (d.who || '').trim() }))
+      .map((d) => ({ dish: (d.dish || '').trim() }))
       .filter((it) => it.dish))
     .catch(() => []);
 }
@@ -236,7 +238,7 @@ function initDishBoard() {
           : it.dish;
 
         // textContent, never innerHTML — this is guest-submitted text.
-        li.textContent = it.who ? `${dish} — ${it.who}` : dish;
+        li.textContent = dish;
         list.appendChild(li);
       });
 
