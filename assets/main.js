@@ -72,7 +72,7 @@ function initRsvp() {
     "Name(s):\n" +
     "How many adults:\n" +
     "How many kids:\n" +
-    "What we're bringing:\n"
+    "Bringing a side or dessert (optional):\n"
   );
   btn.href = `mailto:${PARTY.fallbackEmail}?subject=${subject}&body=${body}`;
   btn.removeAttribute('target');
