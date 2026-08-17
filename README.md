@@ -25,8 +25,30 @@ countdown element in `index.html`.
 
 ## Still to fill in
 
-- **Google Form RSVP URL** — set `rsvpUrl` in `assets/main.js`. Until it's
-  set, the RSVP button opens a pre-filled email to Joe instead.
+- **Approved-dish sheet URL** — set `dishBoardCsv` in `assets/main.js` to the
+  *Publish to web* CSV link for the curated dish tab. Until it's set, the
+  page shows the hand-written fallback list in `index.html`.
+
+## The dish board
+
+The "already claimed" list reads a Google Sheet at page load.
+
+It deliberately does **not** read the raw form responses — that tab holds
+guests' names and free-text notes, and publishing it would put all of it on a
+public page. It reads a separate tab containing only approved entries:
+column A the dish, column B who (optional).
+
+Two constraints worth knowing before changing this:
+
+1. It must be a **Publish to web** link. The ordinary `/export?format=csv`
+   share link 307-redirects to a host that sends no `Access-Control-Allow-Origin`
+   header, so the browser blocks it. Published sheets serve CSV with `*`.
+2. Google caches published sheets for a few minutes, so edits take a little
+   while to appear. That's Google's cache, not ours.
+
+Every failure — network down, sheet unpublished, nothing approved yet —
+leaves the fallback list in place rather than emptying the section. Entries
+render via `textContent`, so submitted text can never inject markup.
 
 ## Running it locally
 

@@ -14,6 +14,20 @@ const PARTY = {
 
   // Where RSVPs go when there's no form yet.
   fallbackEmail: 'flattery89@gmail.com',
+
+  // "Publish to web" CSV link for the APPROVED dish tab — not the raw form
+  // responses, which contain guests' names and free-text notes.
+  //
+  // Must be a File > Share > Publish to web link. The ordinary share link
+  // (/export?format=csv) redirects through a host that sends no CORS header,
+  // so the browser refuses to read it.
+  //
+  // Expected columns: A = dish, B = who (optional). Empty here means the
+  // page keeps the hand-written fallback list in index.html.
+  dishBoardCsv: '',
+
+  // Longest dish text we'll render, so one joker can't blow up the layout.
+  maxDishLength: 90,
 };
 
 /* ─────────── Countdown ─────────── */
@@ -107,10 +121,93 @@ function initMap() {
   }
 }
 
+/* ─────────── Live dish board ───────────
+   Reads the approved-dish sheet and lists what people are bringing.
+   Every failure path leaves the fallback list in index.html untouched —
+   a stale list beats an empty one.                                      */
+
+// Minimal RFC-4180 parser: handles quoted fields containing commas,
+// newlines, and escaped ("") quotes, which a naive split(',') mangles.
+function parseCsv(text) {
+  const rows = [];
+  let row = [], field = '', inQuotes = false;
+
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+
+    if (inQuotes) {
+      if (c === '"') {
+        if (text[i + 1] === '"') { field += '"'; i++; }
+        else inQuotes = false;
+      } else field += c;
+      continue;
+    }
+
+    if (c === '"') inQuotes = true;
+    else if (c === ',') { row.push(field); field = ''; }
+    else if (c === '\n' || c === '\r') {
+      if (c === '\r' && text[i + 1] === '\n') i++;
+      row.push(field); field = '';
+      rows.push(row); row = [];
+    } else field += c;
+  }
+
+  row.push(field);
+  if (row.some((f) => f !== '')) rows.push(row);
+  return rows;
+}
+
+function initDishBoard() {
+  const list = document.getElementById('dishList');
+  const lede = document.getElementById('dishLede');
+  if (!list || !PARTY.dishBoardCsv) return;
+
+  // Google caches published sheets for a few minutes; a per-minute token
+  // stops the browser adding its own cache on top of that.
+  const sep = PARTY.dishBoardCsv.includes('?') ? '&' : '?';
+  const url = `${PARTY.dishBoardCsv}${sep}cb=${Math.floor(Date.now() / 60000)}`;
+
+  const timeout = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error('timeout')), 8000));
+
+  Promise.race([fetch(url, { cache: 'no-store' }), timeout])
+    .then((res) => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.text();
+    })
+    .then((text) => {
+      const items = parseCsv(text)
+        .map((r) => ({
+          dish: (r[0] || '').trim(),
+          who:  (r[1] || '').trim(),
+        }))
+        // Drop blanks and a header row if the sheet has one.
+        .filter((it) => it.dish && !/^(dish|what|item)$/i.test(it.dish));
+
+      if (!items.length) return;   // nothing approved yet — keep the fallback
+
+      list.textContent = '';
+      items.forEach((it) => {
+        const li = document.createElement('li');
+        const dish = it.dish.length > PARTY.maxDishLength
+          ? it.dish.slice(0, PARTY.maxDishLength) + '…'
+          : it.dish;
+
+        // textContent, never innerHTML — this is guest-submitted text.
+        li.textContent = it.who ? `${dish} — ${it.who}` : dish;
+        list.appendChild(li);
+      });
+
+      if (lede) lede.textContent = `Already claimed (${items.length}):`;
+    })
+    .catch(() => { /* keep whatever is already on the page */ });
+}
+
 /* ─────────── Go ─────────── */
 
 document.addEventListener('DOMContentLoaded', () => {
   initCountdown();
   initRsvp();
   initMap();
+  initDishBoard();
 });

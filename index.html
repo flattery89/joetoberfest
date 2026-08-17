@@ -203,8 +203,11 @@
         <h3 class="split__head">Bring a side or a dessert</h3>
         <p>If you can, bring a side or a dessert &mdash; it's appreciated, and it's not required. Come empty-handed and you'll still be fed. Wurst, pretzels, and beer are covered either way.</p>
         <p>If you do bring something, say what when you RSVP so we don't end up with nine potato salads.</p>
-        <p class="claimed-lede">Already claimed:</p>
-        <ul class="claimed">
+        <p class="claimed-lede" id="dishLede">Already claimed:</p>
+        <!-- Filled live from the approved dish sheet by initDishBoard() in
+             assets/main.js. These two are the fallback if the sheet can't be
+             reached, so the section is never empty. -->
+        <ul class="claimed" id="dishList">
           <li>German potato salad</li>
           <li>German butter cake</li>
         </ul>
