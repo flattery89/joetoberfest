@@ -755,19 +755,18 @@ img, svg, iframe { max-width: 100%; }
   box-shadow: var(--shadow-md);
   overflow: hidden;
 }
-/* Google sets the form's own height, and we can't measure it across
-   origins — so these are sized to fit the six questions without an inner
-   scrollbar. Narrower screens wrap more, so they need more room. */
+/* Capped at 600px tall — the form scrolls inside its own frame rather
+   than running the height of the section. One scrollbar, Google's, so
+   there's no nested-scroll fight on touch. */
 .rsvp__frame iframe {
   display: block;
   width: 100%;
-  height: 1260px;
+  height: 600px;
+  max-height: 600px;
   border: 0;
   border-radius: 12px;
   background: var(--foam);
 }
-@media (max-width: 700px) { .rsvp__frame iframe { height: 1380px; } }
-@media (max-width: 420px) { .rsvp__frame iframe { height: 1430px; } }
 .rsvp__done {
   background: var(--cream);
   border: 3px solid var(--gold);
