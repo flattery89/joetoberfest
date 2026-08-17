@@ -9,7 +9,8 @@ const PARTY = {
   address: '415 Oak Hill Dr, Altamonte Springs, FL 32701',
 
   // Google Form RSVP link. Empty = the RSVP button falls back to email.
-  rsvpUrl: '',
+  // The form is also embedded directly in index.html — keep the two in sync.
+  rsvpUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSdgdkmn9USxeSJN1dR_hwGkldRiHSYmPDX9Wj2nb2SxHSHEvg/viewform',
 
   // Where RSVPs go when there's no form yet.
   fallbackEmail: 'flattery89@gmail.com',
