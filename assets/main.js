@@ -24,7 +24,7 @@ const PARTY = {
   //
   // Expected columns: A = dish, B = who (optional). Empty here means the
   // page keeps the hand-written fallback list in index.html.
-  dishBoardCsv: '',
+  dishBoardCsv: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQc2fDKK1oDVUGrJ5WVH6MxhS1irTFToS784LmUqRxP_XW6jgC4HdINgD-u5Gwumwi_4TOJY5IjOHWR/pub?gid=1787531315&single=true&output=csv',
 
   // Longest dish text we'll render, so one joker can't blow up the layout.
   maxDishLength: 90,
