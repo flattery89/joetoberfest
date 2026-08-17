@@ -6,7 +6,7 @@
 const PARTY = {
   // Full street address. Leave empty until it's confirmed — the map
   // section falls back to a placeholder rather than pointing somewhere wrong.
-  address: '',
+  address: '415 Oak Hill Dr, Altamonte Springs, FL 32701',
 
   // Google Form RSVP link. Empty = the RSVP button falls back to email.
   rsvpUrl: '',
@@ -106,37 +106,10 @@ function initMap() {
   }
 }
 
-/* ─────────── Reveal on scroll ─────────── */
-
-function initReveal() {
-  const targets = document.querySelectorAll(
-    '.card, .menu__board, .split__col, .schedule__item, .directions__map, .directions__info, .music__frame'
-  );
-  if (!targets.length) return;
-
-  if (!('IntersectionObserver' in window) ||
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    return;
-  }
-
-  targets.forEach((t) => t.classList.add('reveal'));
-
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      entry.target.classList.add('is-visible');
-      io.unobserve(entry.target);
-    });
-  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-
-  targets.forEach((t) => io.observe(t));
-}
-
 /* ─────────── Go ─────────── */
 
 document.addEventListener('DOMContentLoaded', () => {
   initCountdown();
   initRsvp();
   initMap();
-  initReveal();
 });
