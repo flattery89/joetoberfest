@@ -151,6 +151,47 @@ function initGoogleCalendar() {
   link.href = `https://calendar.google.com/calendar/render?${params}`;
 }
 
+/* ─────────── RSVP confirmation ───────────
+   The form lives in a cross-origin iframe, so its contents can't be read
+   — but the iframe still fires `load` when Google navigates it, and a
+   single-page form only navigates when it's submitted. Second load =
+   submitted. Google's own confirmation is a bare grey line stranded in a
+   frame sized for the whole form, so we swap in our own instead.
+
+   A stray navigation (someone hitting "Clear form") would trip this too,
+   which is why there's a way back to the form rather than a dead end. */
+
+function initRsvpConfirm() {
+  const frame = document.querySelector('.rsvp__frame iframe');
+  const shell = document.querySelector('.rsvp__frame');
+  const done = document.getElementById('rsvpDone');
+  const again = document.getElementById('rsvpAgain');
+  if (!frame || !shell || !done) return;
+
+  let loads = 0;
+
+  frame.addEventListener('load', () => {
+    loads += 1;
+    if (loads < 2) return;        // first load is the blank form arriving
+
+    shell.hidden = true;
+    done.hidden = false;
+    // Keep them where they are rather than throwing them to the top.
+    done.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  });
+
+  if (again) {
+    again.addEventListener('click', (e) => {
+      e.preventDefault();
+      done.hidden = true;
+      shell.hidden = false;
+      loads = 1;                  // the reload below becomes the new "first"
+      frame.src = frame.src;
+      shell.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    });
+  }
+}
+
 /* ─────────── Map ─────────── */
 
 function initMap() {
@@ -307,6 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initCountdown();
   initRsvp();
   initParallax();
+  initRsvpConfirm();
   initGoogleCalendar();
   initMap();
   initDishBoard();

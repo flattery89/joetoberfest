@@ -309,6 +309,22 @@
         loading="lazy">Loading the RSVP form&hellip;</iframe>
     </div>
 
+    <!-- Shown in place of the form once it's been submitted. -->
+    <div class="rsvp__done" id="rsvpDone" hidden>
+      <p class="rsvp__done-head">You&rsquo;re in! 🍻</p>
+      <p class="rsvp__done-body">
+        We&rsquo;ve got you. See you Saturday, September 19<sup>th</sup> at noon &mdash;
+        415 Oak Hill Dr.
+      </p>
+      <a class="btn btn--ghost" href="joetoberfest.ics" download="joetoberfest.ics">
+        Add it to your calendar
+      </a>
+      <p class="rsvp__done-note">
+        Submitted by mistake, or need to change something?
+        <a href="#" id="rsvpAgain">Fill it in again</a>.
+      </p>
+    </div>
+
     <a class="btn btn--gold" id="rsvpBtn" href="#" target="_blank" rel="noopener">
       Trouble with the form? Open it here 🍻
     </a>
