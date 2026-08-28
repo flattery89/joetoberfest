@@ -63,11 +63,22 @@ whether or not the scheduled review runs.
 
 ### Reviewing new answers
 
-    python3 tools/responses.py            # dish answers not yet on the site
+    python3 tools/responses.py            # dish answers not yet reviewed
+    python3 tools/responses.py --all      # every answer, reviewed or not
     python3 tools/responses.py --counts   # headcount
 
 The script is read-only — there's no Sheets API access here, so approvals go
 into `dishes.json` rather than back into the sheet.
+
+An answer stops being listed once it has been dealt with **either way**:
+published to `dishes.json`, or written to `tools/declined.local.json` when it
+was reviewed and turned down. Without that second file a rejected answer comes
+back every single run, so the same handful of jokes get re-reported forever.
+
+`declined.local.json` is gitignored on purpose — this repo is public, and
+guests' throwaway form answers don't belong in it. It records the dish text and
+a short reason, never who said it. Deleting an entry puts that answer back in
+the review queue; `--all` shows everything regardless.
 
 **Publish a dish only if it is plainly a real dish or drink someone could
 carry through the door.** When in doubt, leave it out and ask Joe — a missing
